@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/RomanKovalev007/subscriptions-service/internal/apperr"
 	"github.com/RomanKovalev007/subscriptions-service/internal/domain"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -91,7 +92,7 @@ func (r *subscriptionRepo) Delete(ctx context.Context, id uuid.UUID) error {
 		return fmt.Errorf("delete subscription: %w", err)
 	}
 	if tag.RowsAffected() == 0 {
-		return domain.ErrNotFound
+		return apperr.ErrNotFound
 	}
 	return nil
 }
@@ -139,7 +140,7 @@ func scanSubscription(scanner subscriptionScanner) (*domain.Subscription, error)
 		&s.UpdatedAt,
 	); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, domain.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
