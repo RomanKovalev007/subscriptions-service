@@ -37,9 +37,9 @@ type UpdateSubscriptionInput struct {
 
 // TotalCostInput is the request body for the total-cost query.
 type TotalCostInput struct {
-	From        string  `json:"from" validate:"required"`
-	To          string  `json:"to"`
-	UserID      string  `json:"user_id" validate:"required,uuid4"`
+	From        string  `json:"from"        validate:"required"`
+	To          string  `json:"to"          validate:"required"`
+	UserID      string  `json:"user_id"     validate:"required,uuid4"`
 	ServiceName *string `json:"service_name" `
 }
 
