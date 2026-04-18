@@ -96,6 +96,32 @@ func (r *subscriptionRepo) Delete(ctx context.Context, id uuid.UUID) error {
 	return nil
 }
 
+func (r *subscriptionRepo) TotalCost(ctx context.Context, f domain.TotalCostFilter) (int, error) {
+	const q = `
+		SELECT COALESCE(SUM(
+			price * (
+				(
+					EXTRACT(YEAR FROM LEAST(COALESCE(end_date, $2), $2))
+					- EXTRACT(YEAR FROM GREATEST(start_date, $1))
+				) * 12
+				+ EXTRACT(MONTH FROM LEAST(COALESCE(end_date, $2), $2))
+				- EXTRACT(MONTH FROM GREATEST(start_date, $1))
+				+ 1
+			)
+		), 0) AS total_cost
+		FROM subscriptions
+		WHERE start_date <= $2
+		  AND (end_date IS NULL OR end_date >= $1)
+		  AND user_id = $3
+		  AND ($4 IS NULL OR service_name = $4)`
+
+	var total int
+	if err := r.pool.QueryRow(ctx, q, f.From, f.To, f.UserID, f.ServiceName).Scan(&total); err != nil {
+		return 0, fmt.Errorf("total cost query: %w", err)
+	}
+	return total, nil
+}
+
 type subscriptionScanner interface {
 	Scan(dest ...any) error
 }
