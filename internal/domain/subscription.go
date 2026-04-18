@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-
 type Subscription struct {
 	ID          uuid.UUID  `db:"id"           json:"id"`
 	ServiceName string     `db:"service_name" json:"service_name"`
@@ -36,10 +35,18 @@ type UpdateSubscriptionInput struct {
 	EndDate     *string `json:"end_date"`
 }
 
+// TotalCostInput is the request body for the total-cost query.
+type TotalCostInput struct {
+	From        string  `json:"from" validate:"required"`
+	To          int     `json:"to"`
+	UserID      string  `json:"user_id" validate:"required,uuid4"`
+	ServiceName *string `json:"service_name" `
+}
+
 // TotalCostFilter holds parameters for the total-cost query.
 type TotalCostFilter struct {
 	From        time.Time
 	To          time.Time
-	UserID      *uuid.UUID
+	UserID      uuid.UUID
 	ServiceName *string
 }
