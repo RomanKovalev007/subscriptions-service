@@ -13,9 +13,24 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Host string `env:"SERVER_HOST" env-default:"0.0.0.0"`
-	Port string `env:"SERVER_PORT" env-default:"8080"`
-	LogLevel string `env:"LOG_LEVEL" env-default:"info"`
+	Host         string `env:"SERVER_HOST"          env-default:"0.0.0.0"`
+	Port         string `env:"SERVER_PORT"          env-default:"8080"`
+	LogLevel     string `env:"LOG_LEVEL"            env-default:"info"`
+	ReadTimeout  int    `env:"SERVER_READ_TIMEOUT"  env-default:"15"`
+	WriteTimeout int    `env:"SERVER_WRITE_TIMEOUT" env-default:"15"`
+	IdleTimeout  int    `env:"SERVER_IDLE_TIMEOUT"  env-default:"60"`
+}
+
+func (c ServerConfig) ReadTimeoutDuration() time.Duration {
+	return time.Duration(c.ReadTimeout) * time.Second
+}
+
+func (c ServerConfig) WriteTimeoutDuration() time.Duration {
+	return time.Duration(c.WriteTimeout) * time.Second
+}
+
+func (c ServerConfig) IdleTimeoutDuration() time.Duration {
+	return time.Duration(c.IdleTimeout) * time.Second
 }
 
 type PostgresConfig struct {
