@@ -55,7 +55,7 @@ func (r *subscriptionRepo) List(ctx context.Context, userID uuid.UUID, serviceNa
 	}
 	defer rows.Close()
 
-	var subs []*domain.Subscription
+	subs := make([]*domain.Subscription, 0)
 	for rows.Next() {
 		sub, err := scanSubscription(rows)
 		if err != nil {
