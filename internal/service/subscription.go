@@ -133,16 +133,12 @@ func (s *subscriptionService) Delete(ctx context.Context, id uuid.UUID) error {
 	return nil
 }
 
-func (s *subscriptionService) TotalCost(ctx context.Context, input domain.TotalCostInput) (int, error) {
-	userID, err := uuid.Parse(input.UserID)
-	if err != nil {
-		return 0, apperr.New(apperr.CodeInvalidInput, "invalid user_id")
-	}
-	fromDate, err := firstOfMonth(input.From)
+func (s *subscriptionService) TotalCost(ctx context.Context, from, to string, userID uuid.UUID, serviceName *string) (int, error) {
+	fromDate, err := firstOfMonth(from)
 	if err != nil {
 		return 0, apperr.New(apperr.CodeInvalidInput, "from: "+err.Error())
 	}
-	toDate, err := firstOfMonth(input.To)
+	toDate, err := firstOfMonth(to)
 	if err != nil {
 		return 0, apperr.New(apperr.CodeInvalidInput, "to: "+err.Error())
 	}
@@ -154,7 +150,7 @@ func (s *subscriptionService) TotalCost(ctx context.Context, input domain.TotalC
 		From:        fromDate,
 		To:          toDate,
 		UserID:      userID,
-		ServiceName: input.ServiceName,
+		ServiceName: serviceName,
 	}
 
 	total, err := s.repo.TotalCost(ctx, filter)
