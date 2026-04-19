@@ -35,18 +35,15 @@ type UpdateSubscriptionInput struct {
 	EndDate     *string `json:"end_date"`
 }
 
-// TotalCostInput is the request body for the total-cost query.
-type TotalCostInput struct {
-	From        string  `json:"from"        validate:"required"`
-	To          string  `json:"to"          validate:"required"`
-	UserID      string  `json:"user_id"     validate:"required,uuid4"`
-	ServiceName *string `json:"service_name" `
-}
-
 // TotalCostFilter holds parameters for the total-cost query.
 type TotalCostFilter struct {
 	From        time.Time
 	To          time.Time
 	UserID      uuid.UUID
 	ServiceName *string
+}
+
+type ErrorResponse struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }
