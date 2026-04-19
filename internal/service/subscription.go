@@ -23,11 +23,6 @@ func NewSubscriptionService(repo SubscriptionRepository, logger *slog.Logger) *s
 
 
 func (s *subscriptionService) Create(ctx context.Context, input domain.CreateSubscriptionInput) (*domain.Subscription, error) {
-	userID, err := uuid.Parse(input.UserID)
-	if err != nil {
-		return nil, apperr.New(apperr.CodeInvalidInput, "invalid user_id")
-	}
-
 	startDate, err := firstOfMonth(input.StartDate)
 	if err != nil {
 		return nil, apperr.New(apperr.CodeInvalidInput, err.Error())
@@ -36,7 +31,7 @@ func (s *subscriptionService) Create(ctx context.Context, input domain.CreateSub
 	sub := &domain.Subscription{
 		ServiceName: input.ServiceName,
 		Price:       input.Price,
-		UserID:      userID,
+		UserID:      input.UserID,
 		StartDate:   startDate,
 	}
 
@@ -82,11 +77,6 @@ func (s *subscriptionService) List(ctx context.Context, userID uuid.UUID, servic
 }
 
 func (s *subscriptionService) Update(ctx context.Context, id uuid.UUID, input domain.UpdateSubscriptionInput) (*domain.Subscription, error) {
-	userID, err := uuid.Parse(input.UserID)
-	if err != nil {
-		return nil, apperr.New(apperr.CodeInvalidInput, "invalid user_id")
-	}
-
 	startDate, err := firstOfMonth(input.StartDate)
 	if err != nil {
 		return nil, apperr.New(apperr.CodeInvalidInput, err.Error())
@@ -96,7 +86,7 @@ func (s *subscriptionService) Update(ctx context.Context, id uuid.UUID, input do
 		ID:          id,
 		ServiceName: input.ServiceName,
 		Price:       input.Price,
-		UserID:      userID,
+		UserID:      input.UserID,
 		StartDate:   startDate,
 	}
 
