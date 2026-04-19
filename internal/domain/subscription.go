@@ -19,20 +19,20 @@ type Subscription struct {
 
 // CreateSubscriptionInput is the request body for creating a subscription.
 type CreateSubscriptionInput struct {
-	ServiceName string  `json:"service_name" validate:"required"`
-	Price       int     `json:"price"        validate:"min=0"`
-	UserID      string  `json:"user_id"      validate:"required,uuid4"`
-	StartDate   string  `json:"start_date"   validate:"required"`
-	EndDate     *string `json:"end_date"`
+	ServiceName string    `json:"service_name" validate:"required"`
+	Price       int       `json:"price"        validate:"min=0"`
+	UserID      uuid.UUID `json:"user_id"`
+	StartDate   string    `json:"start_date"   validate:"required"`
+	EndDate     *string   `json:"end_date"`
 }
 
 // UpdateSubscriptionInput is the request body for updating a subscription.
 type UpdateSubscriptionInput struct {
-	ServiceName string  `json:"service_name" validate:"required"`
-	Price       int     `json:"price"        validate:"min=0"`
-	UserID      string  `json:"user_id"      validate:"required,uuid4"`
-	StartDate   string  `json:"start_date"   validate:"required"`
-	EndDate     *string `json:"end_date"`
+	ServiceName string    `json:"service_name" validate:"required"`
+	Price       int       `json:"price"        validate:"min=0"`
+	UserID      uuid.UUID `json:"user_id"`
+	StartDate   string    `json:"start_date"   validate:"required"`
+	EndDate     *string   `json:"end_date"`
 }
 
 // TotalCostFilter holds parameters for the total-cost query.
