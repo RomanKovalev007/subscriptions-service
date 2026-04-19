@@ -74,14 +74,13 @@ func (r *subscriptionRepo) Update(ctx context.Context, s *domain.Subscription) (
 		UPDATE subscriptions
 		SET service_name = $1,
 		    price        = $2,
-		    user_id      = $3,
-		    start_date   = $4,
-		    end_date     = $5,
+		    start_date   = $3,
+		    end_date     = $4,
 		    updated_at   = NOW()
-		WHERE id = $6
+		WHERE id = $5
 		RETURNING id, service_name, price, user_id, start_date, end_date, created_at, updated_at`
 
-	row := r.pool.QueryRow(ctx, q, s.ServiceName, s.Price, s.UserID, s.StartDate, s.EndDate, s.ID)
+	row := r.pool.QueryRow(ctx, q, s.ServiceName, s.Price, s.StartDate, s.EndDate, s.ID)
 	return scanSubscription(row)
 }
 
