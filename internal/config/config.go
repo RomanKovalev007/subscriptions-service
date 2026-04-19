@@ -15,6 +15,7 @@ type Config struct {
 type ServerConfig struct {
 	Host string `env:"SERVER_HOST" env-default:"0.0.0.0"`
 	Port string `env:"SERVER_PORT" env-default:"8080"`
+	LogLevel string `env:"LOG_LEVEL" env-default:"info"`
 }
 
 type PostgresConfig struct {
