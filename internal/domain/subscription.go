@@ -19,8 +19,8 @@ type Subscription struct {
 
 // CreateSubscriptionInput is the request body for creating a subscription.
 type CreateSubscriptionInput struct {
-	ServiceName string    `json:"service_name" validate:"required"`
-	Price       int       `json:"price"        validate:"min=0"`
+	ServiceName string    `json:"service_name" validate:"required,max=255"`
+	Price       int       `json:"price"        validate:"min=1"`
 	UserID      uuid.UUID `json:"user_id"`
 	StartDate   string    `json:"start_date"   validate:"required"`
 	EndDate     *string   `json:"end_date"`
@@ -28,8 +28,8 @@ type CreateSubscriptionInput struct {
 
 // UpdateSubscriptionInput is the request body for updating a subscription.
 type UpdateSubscriptionInput struct {
-	ServiceName string    `json:"service_name" validate:"required"`
-	Price       int       `json:"price"        validate:"min=0"`
+	ServiceName string    `json:"service_name" validate:"required,max=255"`
+	Price       int       `json:"price"        validate:"min=1"`
 	UserID      uuid.UUID `json:"user_id"`
 	StartDate   string    `json:"start_date"   validate:"required"`
 	EndDate     *string   `json:"end_date"`
