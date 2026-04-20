@@ -48,7 +48,7 @@ go test ./internal/service/...
 
 ### Интеграционные тесты репозитория
 
-Проверяют SQL-логику `TotalCost` против реального PostgreSQL. Контейнер поднимается автоматически через testcontainers-go — нужен только запущенный Docker.
+Проверяют SQL-логику `TotalCost` на реальном PostgreSQL. Контейнер поднимается автоматически через testcontainers-go - нужен только запущенный Docker.
 
 ```bash
 go test ./internal/repository/... -timeout 120s
