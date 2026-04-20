@@ -46,7 +46,7 @@ func (r *subscriptionRepo) List(ctx context.Context, userID uuid.UUID, serviceNa
 		SELECT id, service_name, price, user_id, start_date, end_date, created_at, updated_at
 		FROM subscriptions
 		WHERE user_id = $1
-		  AND ($2 IS NULL OR service_name = $2)
+		  AND ($2::text IS NULL OR service_name = $2::text)
 		ORDER BY created_at DESC`
 
 	rows, err := r.pool.Query(ctx, q, userID, serviceName)
@@ -113,7 +113,7 @@ func (r *subscriptionRepo) TotalCost(ctx context.Context, f domain.TotalCostFilt
 		WHERE start_date <= $2
 		  AND (end_date IS NULL OR end_date >= $1)
 		  AND user_id = $3
-		  AND ($4 IS NULL OR service_name = $4)`
+		  AND ($4::text IS NULL OR service_name = $4::text)`
 
 	var total int
 	if err := r.pool.QueryRow(ctx, q, f.From, f.To, f.UserID, f.ServiceName).Scan(&total); err != nil {
