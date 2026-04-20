@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type Handler struct {
@@ -23,6 +24,8 @@ func (h *Handler) Router() http.Handler {
 	r.Use(middleware.Recoverer)
 	r.Use(SlogLogger(h.logger))
 
+	r.Get("/swagger/*", httpSwagger.Handler())
+
 	r.Route("/api/v1/subscriptions", func(r chi.Router) {
 		r.Post("/", h.createSubscription)
 		r.Get("/", h.listSubscriptions)
@@ -34,5 +37,3 @@ func (h *Handler) Router() http.Handler {
 
 	return r
 }
-
-

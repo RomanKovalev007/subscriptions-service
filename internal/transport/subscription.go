@@ -13,6 +13,16 @@ import (
 
 var validate = validator.New()
 
+// createSubscription godoc
+// @Summary      Create subscription
+// @Tags         subscriptions
+// @Accept       json
+// @Produce      json
+// @Param        input body domain.CreateSubscriptionInput true "Subscription data"
+// @Success      201 {object} domain.Subscription
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions [post]
 func (h *Handler) createSubscription(w http.ResponseWriter, r *http.Request) {
 	var input domain.CreateSubscriptionInput
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -32,6 +42,16 @@ func (h *Handler) createSubscription(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusCreated, sub)
 }
 
+// listSubscriptions godoc
+// @Summary      List subscriptions
+// @Tags         subscriptions
+// @Produce      json
+// @Param        user_id      query string true  "User UUID"
+// @Param        service_name query string false "Filter by service name"
+// @Success      200 {array}  domain.Subscription
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions [get]
 func (h *Handler) listSubscriptions(w http.ResponseWriter, r *http.Request) {
 	userID, err := uuid.Parse(r.URL.Query().Get("user_id"))
 	if err != nil {
@@ -52,6 +72,16 @@ func (h *Handler) listSubscriptions(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusOK, subs)
 }
 
+// getSubscription godoc
+// @Summary      Get subscription by ID
+// @Tags         subscriptions
+// @Produce      json
+// @Param        id path string true "Subscription UUID"
+// @Success      200 {object} domain.Subscription
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      404 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions/{id} [get]
 func (h *Handler) getSubscription(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
@@ -67,6 +97,18 @@ func (h *Handler) getSubscription(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusOK, sub)
 }
 
+// updateSubscription godoc
+// @Summary      Update subscription
+// @Tags         subscriptions
+// @Accept       json
+// @Produce      json
+// @Param        id    path string                        true "Subscription UUID"
+// @Param        input body domain.UpdateSubscriptionInput true "Subscription data"
+// @Success      200 {object} domain.Subscription
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      404 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions/{id} [put]
 func (h *Handler) updateSubscription(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
@@ -92,6 +134,15 @@ func (h *Handler) updateSubscription(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusOK, sub)
 }
 
+// deleteSubscription godoc
+// @Summary      Delete subscription
+// @Tags         subscriptions
+// @Param        id path string true "Subscription UUID"
+// @Success      204
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      404 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions/{id} [delete]
 func (h *Handler) deleteSubscription(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(chi.URLParam(r, "id"))
 	if err != nil {
@@ -106,6 +157,18 @@ func (h *Handler) deleteSubscription(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// totalCost godoc
+// @Summary      Calculate total subscription cost
+// @Tags         subscriptions
+// @Produce      json
+// @Param        from         query string true  "Start month (MM-YYYY)"
+// @Param        to           query string true  "End month (MM-YYYY)"
+// @Param        user_id      query string true  "User UUID"
+// @Param        service_name query string false "Filter by service name"
+// @Success      200 {object} map[string]int
+// @Failure      400 {object} domain.ErrorResponse
+// @Failure      500 {object} domain.ErrorResponse
+// @Router       /subscriptions/total-cost [get]
 func (h *Handler) totalCost(w http.ResponseWriter, r *http.Request) {
 	from := r.URL.Query().Get("from")
 	to := r.URL.Query().Get("to")
@@ -114,19 +177,16 @@ func (h *Handler) totalCost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var userID uuid.UUID
 	raw := r.URL.Query().Get("user_id")
 	if raw == "" {
 		h.writeError(w, http.StatusBadRequest, apperr.CodeInvalidInput, "user_id param is required")
 		return
-	} 
-	id, err := uuid.Parse(raw)
+	}
+	userID, err := uuid.Parse(raw)
 	if err != nil {
 		h.writeError(w, http.StatusBadRequest, apperr.CodeInvalidInput, "invalid user_id")
 		return
 	}
-	userID = id
-	
 
 	var serviceName *string
 	if sn := r.URL.Query().Get("service_name"); sn != "" {

@@ -1,3 +1,9 @@
+// @title           Subscriptions API
+// @version         1.0
+// @description     REST-сервис для агрегации данных об онлайн подписках пользователей.
+// @host            localhost:8080
+// @BasePath        /api/v1
+
 package main
 
 import (
@@ -17,6 +23,7 @@ import (
 	"github.com/RomanKovalev007/subscriptions-service/internal/transport"
 	"github.com/RomanKovalev007/subscriptions-service/migrations"
 	"github.com/RomanKovalev007/subscriptions-service/pkg/postgres"
+	_ "github.com/RomanKovalev007/subscriptions-service/docs"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
